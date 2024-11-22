@@ -1,0 +1,1 @@
+El uso de estos tres scripts separados para implementar funciones específicas como BubbleSort, MaxMinFindery SelectionSortrepresenta una buena práctica para modularidad en programación. Cada archivo se enfoca en un propósito concreto, lo que facilita la comprensión, prueba y mantenimiento de los algoritmos.
