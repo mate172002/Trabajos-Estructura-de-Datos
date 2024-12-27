@@ -1,0 +1,66 @@
+class SyntaxAnalyzer:
+    def __init__(self, expression):
+        self.expression = expression
+        self.stack = []
+        self.valid_operators = {'+', '-', '*', '/'}
+    
+    def validate_parentheses(self):
+        """Valida el balanceo de paréntesis, corchetes y llaves."""
+        matching = {')': '(', '}': '{', ']': '['}
+        for char in self.expression:
+            if char in "({[":
+                self.stack.append(char)
+            elif char in ")}]":
+                if not self.stack or self.stack.pop() != matching[char]:
+                    return False, f"Error: Paréntesis desbalanceados en '{char}'."
+        if self.stack:
+            return False, "Error: Faltan paréntesis de cierre."
+        return True, "Paréntesis balanceados correctamente."
+
+    def validate_syntax(self):
+        """Valida operadores, operandos y la disposición correcta."""
+        tokens = list(self.expression.replace(" ", ""))
+        previous = None
+        
+        for token in tokens:
+            if token.isalnum() or token in "({[":
+                if previous and previous.isalnum():
+                    return False, f"Error: Operandos consecutivos detectados cerca de '{token}'."
+            elif token in self.valid_operators:
+                if not previous or previous in self.valid_operators or previous in "({[":
+                    return False, f"Error: Operador mal ubicado '{token}'."
+            elif token in ")}]":
+                if not previous or previous in self.valid_operators:
+                    return False, f"Error: Paréntesis de cierre mal posicionado '{token}'."
+            previous = token
+
+        if previous in self.valid_operators:
+            return False, f"Error: Expresión termina en un operador '{previous}'."
+        return True, "Disposición de operadores y operandos válida."
+
+    def analyze(self):
+        """Ejecuta todas las validaciones."""
+        parenthesis_valid, parenthesis_msg = self.validate_parentheses()
+        if not parenthesis_valid:
+            return parenthesis_msg
+
+        syntax_valid, syntax_msg = self.validate_syntax()
+        if not syntax_valid:
+            return syntax_msg
+
+        return "Expresión válida."
+
+# Ejemplos de uso
+if __name__ == "__main__":
+    expressions = [
+        "((a + b) * c)",    # Válido
+        "5 * (3 + 2)",      # Válido
+        "(a + b))",         # Inválido
+        "5 + * 3",          # Inválido
+        "(3 + 2",           # Inválido
+    ]
+    
+    for expr in expressions:
+        analyzer = SyntaxAnalyzer(expr)
+        result = analyzer.analyze()
+        print(f"Expresión: {expr}\nResultado: {result}\n")
