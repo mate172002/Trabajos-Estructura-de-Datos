@@ -37,3 +37,5 @@ nodo5.derecha = nodo4
 arbol = ArbolExpresion(nodo5)
 resultado = arbol.evaluar(arbol.raiz)
 print("Resultado:", resultado) 
+
+
